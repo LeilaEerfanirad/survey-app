@@ -1,0 +1,57 @@
+import { Bars3Icon } from "@heroicons/react/24/solid";
+// import { useThemeStore } from "Store/useThemeStore";
+import { useMediaQuery } from "@react-hook/media-query";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+
+import { toggleCompactDrawer, toggleOpenDrawer } from '../../../../redux/features/settingsSlice'
+export default function Header() {
+    const isDesktop = useMediaQuery("(min-width: 768px)");
+
+    //   const toggleCompactDrawer = useThemeStore(
+    //     (state) => state.toggleCompactDrawer
+    //   );
+    //   const toggleOpenDrawer = useThemeStore((state) => state.toggleOpenDrawer);
+
+
+    const dispatch = useDispatch()
+
+    //   const lo = localStorage.getItem("userInfo") || "";
+
+    //   const [userData, setUserData] = useState({
+    //     username: "",
+    //   });
+
+    //   useEffect(() => {
+    //     if (lo) {
+    //       const userInfo = JSON.parse(localStorage.getItem("userInfo") || "");
+
+    //       setUserData(userInfo);
+    //     }
+    //   }, []);
+
+    const handleToggleDrawer = () => {
+        if (isDesktop) {
+            dispatch(toggleCompactDrawer());
+        } else {
+            dispatch(toggleOpenDrawer());
+        }
+    };
+
+    return (
+        <header className="shadow-md sticky top-0 left-0 duration-200 z-40">
+            <div className="flex items-center justify-between bg-white p-4">
+                <Bars3Icon
+                    onClick={handleToggleDrawer}
+                    className="w-8 h-8 text-blue-500 cursor-pointer mx-2"
+                />
+                <div className="flex justify-between items-center">
+                    <h1 className="md:text-left text-gray-700 font-semibold">
+                        {/* {lo ? userData?.username : ""} */}
+                    </h1>
+                </div>
+            </div>
+        </header>
+    );
+}
