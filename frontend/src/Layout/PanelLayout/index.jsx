@@ -56,14 +56,15 @@ export default function PanelLayout() {
     }, []);
 
     return (
-        <main className="h-screen flex flex-col">
+        <main className="h-screen overflow-hidden flex flex-col">
             <Sidebar />
             <div
-                className={`flex flex-col flex-1 ${isCompact ? "md:mr-[256px]" : "md:mr-20"
+                className={`flex flex-col overflow-hidden flex-1 ${isCompact ? "md:mr-[256px]" : "md:mr-20"
                     } `}
             >
                 <Header />
-                <section className="px-4 border border-purple-500 md:px-14 py-10 flex-1">
+                <section className="border overflow-hidden border-purple-500 flex-1">
+
                     <Outlet />
                 </section>
             </div>

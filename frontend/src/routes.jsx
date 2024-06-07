@@ -3,6 +3,7 @@ import AuthLayout from "./Layout/AuthLayout";
 import LoginPage from "./Pages/Login";
 import SignupPage from "./Pages/Signup";
 import PanelLayout from "./Layout/PanelLayout";
+import SurveyBuilder from "./Pages/Panel/SurveyBuilder";
 
 
 const AuthRoutes = [
@@ -27,10 +28,10 @@ const PanelRoutes = [
         path: "/panel",
         element: <PanelLayout />,
         children: [
-            // {
-            //     path: "/ssss",
-            //     element: <LoginPage />,
-            // },
+            {
+                path: "survey-builder",
+                element: <SurveyBuilder />,
+            },
             // {
             //     path: "/signup",
             //     element: <SignupPage />,
