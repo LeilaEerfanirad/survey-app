@@ -32,10 +32,6 @@ const PanelRoutes = [
                 path: "survey-builder",
                 element: <SurveyBuilder />,
             },
-            // {
-            //     path: "/signup",
-            //     element: <SignupPage />,
-            // },
         ],
     },
 ];

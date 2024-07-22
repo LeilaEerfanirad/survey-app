@@ -8,6 +8,9 @@ const initialState = {
         }
     }
 
+    ,
+    theme: "dark"
+
 }
 
 
@@ -22,7 +25,7 @@ export const settingsSlice = createSlice({
         },
         toggleOpenDrawer: (state, action) => {
             state.layout.drawer.isOpen = !state.layout.drawer.isOpen
-        }
+        },
 
     }
 })
