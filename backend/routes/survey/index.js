@@ -8,6 +8,9 @@ const router = express.Router()
 const createSurvey = require('./createSurvey')
 router.use("/create", createSurvey)
 
+const getSurveies = require('./getSurveies')
+router.use("/", getSurveies)
+
 
 
 module.exports = router

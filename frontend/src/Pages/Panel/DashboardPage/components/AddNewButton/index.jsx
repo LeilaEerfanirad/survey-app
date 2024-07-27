@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function AddNewButton({ handleAddSurvey }) {
     return (
-        <button onClick={handleAddSurvey} className='border h-52 flex items-center justify-center rounded-md'>
+        <button onClick={handleAddSurvey} className='border w-56 h-40 flex items-center justify-center rounded-md'>
 
             <PlusIcon width={40} />
 
