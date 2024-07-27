@@ -8,6 +8,10 @@
     src: url(./Assets/fonts/Vazir.ttf);
 }
 
+* {
+    font-family: vazir;
+}
+
 body {
     font-family: vazir;
 }

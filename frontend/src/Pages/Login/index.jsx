@@ -1,18 +1,29 @@
+import { Button, Input } from 'antd'
 import React from 'react'
-import { Button } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { toggleCompactDrawer } from '../../redux/features/settingsSlice'
-export default function LoginPage() {
+export default function SignupPage() {
 
-    const layout = useSelector((state) => state.settings)
 
-    const dispatch = useDispatch()
 
-    console.log(layout);
     return (
-        <div>
-            <Button type='primary' onClick={() => dispatch(toggleCompactDrawer("salam"))}>سلام</Button>
+        <div className='flex-1 flex items-center justify-center py-4'>
+            <div className='border rounded-md p-4 flex flex-col gap-4 max-w-md min-w-96 m-auto'>
+                <h1 className='text-center'>ورود</h1>
+                <div className='flex flex-col gap-2'>
+                    <label className='text-sm' htmlFor="">نام کاربری</label>
+                    <Input placeholder="" />
+                </div>
+                <div className='flex flex-col gap-2'>
+                    <label className='text-sm' htmlFor="">رمز عبور</label>
+                    <Input.Password placeholder="" />
+                </div>
+
+                <Button className='' type="primary">ورود</Button>
+
+
+
+
+            </div>
         </div>
     )
 }
