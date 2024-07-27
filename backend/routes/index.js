@@ -11,6 +11,13 @@ router.use("/login", loginRout)
 
 
 
+//survey
+const survey = require('./survey')
+router.use("/survey", survey)
+
+
+
+
 
 module.exports = router
 
