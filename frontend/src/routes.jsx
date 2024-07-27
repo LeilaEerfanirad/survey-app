@@ -34,7 +34,7 @@ const PanelRoutes = [
                 element: <DashboardPage />,
             },
             {
-                path: "survey-builder",
+                path: "survey/:surveyId",
                 element: <SurveyBuilder />,
             },
         ],
