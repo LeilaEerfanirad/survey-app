@@ -29,6 +29,11 @@ export default function ModalsLayout({ open, setOpen, title, children, onOk }) {
             }
             .ant-modal-content {
             height:100%;
+            display:flex;
+            flex-direction:column;
+            }
+            .ant-modal-body{
+            flex:1;
             }
             `}
       </style>

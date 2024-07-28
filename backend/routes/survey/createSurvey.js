@@ -6,42 +6,40 @@ const { getDataJwt } = require('../../functions/jwtHandler')
 
 
 
-router.post("/", (req, resp) => {
+router.post("/", async (req, resp) => {
 
     const { name } = req.body
     const token = req.headers.authorization
 
+    try {
+        const { userId } = await getDataJwt(token)
 
-    getDataJwt(token, async (status, result) => {
+        const user = await UserModel.findById({ _id: userId })
 
-        if (status === "success") {
+        const newSurvey = await SurveyModel.create({
+            name
+        })
 
-            const { userId } = result
+        user.surveies = [...user.surveies, newSurvey._id]
+        user.save()
 
-            const user = await UserModel.findById({ _id: userId })
+        resp.json({
+            surveyId: newSurvey._id,
+            status: "success",
+            msg: "نظرستجی ساختع شد"
+        })
 
-            const newSurvey = await SurveyModel.create({
 
-                name
 
-            })
+    } catch (e) {
 
-            user.surveies = [...user.surveies, newSurvey._id]
-            user.save()
+        return resp.json({
+            status: "error",
+            msg: "عدد تصویر اشتباه وارد شده است"
+        })
 
-            resp.json({
-                surveyId: newSurvey._id,
-                status: "success",
-                msg: "نظرستجی ساختع شد"
-            })
+    }
 
-        } else {
-            return resp.json({
-                status: "error",
-                msg: "عدد تصویر اشتباه وارد شده است"
-            })
-        }
-    })
 })
 
 

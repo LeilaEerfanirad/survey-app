@@ -6,7 +6,9 @@ const { getDataJwt } = require('../../functions/jwtHandler')
 
 
 
-router.get("/", async (req, resp) => {
+router.get("/:surveyId", async (req, resp) => {
+
+    const { surveyId } = req.params
 
     const token = req.headers.authorization
 
@@ -14,11 +16,11 @@ router.get("/", async (req, resp) => {
 
         const { userId } = await getDataJwt(token)
 
-        const user = await UserModel.findOne({ _id: userId }).populate('surveies')
+        const survey = await SurveyModel.findOne({ _id: surveyId }).populate('questions')
 
-        return resp.json({
-            surveies: user.surveies
-        })
+        // const survey = user.surveies.find(item => item._id.toString() === surveyId)
+
+        return resp.json(survey)
 
 
     } catch (e) {
