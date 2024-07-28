@@ -1,10 +1,10 @@
-import { Modal } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React from 'react'
+import ModalsLayout from '../ModalLayout'
 
 export default function LongTextAnswerModal({ open, setOpen }) {
     return (
-        <Modal classNames='w-full h-full' title="سوال با پاسخ بلند" open={open} onCancel={() => setOpen(false)}>
+        <ModalsLayout title="سوال با پاسخ بلند" open={open} setOpen={setOpen}>
 
             <div className="col-span-3 flex flex-col  border h-full">
                 <div className=" flex p-2">
@@ -24,7 +24,7 @@ export default function LongTextAnswerModal({ open, setOpen }) {
                 <div className="h-16 bg-orange-400"></div>
             </div>
 
-        </Modal>
+        </ModalsLayout>
 
 
     )

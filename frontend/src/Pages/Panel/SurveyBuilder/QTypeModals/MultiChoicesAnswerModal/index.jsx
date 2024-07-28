@@ -1,11 +1,10 @@
-import { Modal } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React from 'react'
+import ModalsLayout from '../ModalLayout'
 
 export default function MultiChoicesAnswerModal({ open, setOpen }) {
     return (
-        <Modal classNames='w-full h-full' title="سوال با پاسخ کوتاه" open={open} onCancel={() => setOpen(false)}>
-
+        <ModalsLayout title="سوال چند گزینه ای" open={open} setOpen={setOpen}>
             <div className="col-span-3 flex flex-col  border h-full">
                 <div className=" flex p-2">
                     <h3>سوال 1</h3>
@@ -23,8 +22,7 @@ export default function MultiChoicesAnswerModal({ open, setOpen }) {
                 </div>
                 <div className="h-16 bg-orange-400"></div>
             </div>
-
-        </Modal>
+        </ModalsLayout>
 
 
     )

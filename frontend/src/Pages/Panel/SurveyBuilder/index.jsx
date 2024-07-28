@@ -8,7 +8,7 @@ import {
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import WellcomeModal from './QTypeModals/WellcomeModal';
 import QuestionItem from './components/QuestionItem';
-import ShortTextAnswerModal from './QTypeModals/MultiChoicesAnswerModal';
+import ShortTextAnswerModal from './QTypeModals/ShortTextAnswerModal';
 import MultiChoicesAnswerModal from './QTypeModals/MultiChoicesAnswerModal';
 import QuestionTypeButton from './components/QuestionTypeButton';
 import TheEndModal from './QTypeModals/TheEndModal';
@@ -139,8 +139,8 @@ export default function SurveyBuilder() {
         <>
             <WellcomeModal open={wellcomeModal} setOpen={setWellcomeModal} />
             <ShortTextAnswerModal open={shortAnswerModal} setOpen={setShortAnswerModal} />
-            <LongTextAnswerModal open={longAnswerModal} setOpen={setLongAnswerModal} />
             <MultiChoicesAnswerModal open={multiChoicesAnswerModal} setOpen={setMultiChoicesAnswerModal} />
+            <LongTextAnswerModal open={longAnswerModal} setOpen={setLongAnswerModal} />
             <TheEndModal open={theEndModal} setOpen={setTheEndModal} />
             <div className="w-full h-full flex relative overflow-hidden border-red-600 border">
                 <div className=" flex bg-slate-100 flex-col gap-3 h-full px-8 py-4  border overflow-y-scroll">

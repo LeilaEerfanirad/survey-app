@@ -1,6 +1,7 @@
 import { Modal } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react'
+import ModalsLayout from '../ModalLayout';
 
 export default function TheEndModal({ open, setOpen }) {
 
@@ -17,13 +18,13 @@ export default function TheEndModal({ open, setOpen }) {
     };
     return (
 
-        <Modal classNames='w-full h-full' title="صفحه پایان" open={open} onOk={handleOk} onCancel={() => setOpen(false)}>
+        <ModalsLayout title="صفحه پایان" open={open} onOk={handleOk} setOpen={setOpen}>
 
             <TextArea rows={4} placeholder="متن خوش‌آمد گویی" maxLength={6} />
 
 
 
 
-        </Modal>
+        </ModalsLayout>
     )
 }

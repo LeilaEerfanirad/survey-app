@@ -1,29 +1,19 @@
 import { Modal } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import ModalsLayout from '../ModalLayout';
 
 export default function WellcomeModal({ open, setOpen }) {
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
 
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
     return (
 
-        <Modal classNames='w-full h-full' title="صفحه خوش‌آمد گویی" open={open} onOk={handleOk} onCancel={() => setOpen(false)}>
+        <ModalsLayout open={open} title="صفحه خوش‌آمد گویی" setOpen={setOpen}>
 
             <TextArea rows={4} placeholder="متن خوش‌آمد گویی" maxLength={6} />
 
+        </ModalsLayout>
 
-
-
-        </Modal>
     )
 }
