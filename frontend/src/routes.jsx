@@ -4,7 +4,6 @@ import LoginPage from "./Pages/Login";
 import SignupPage from "./Pages/Signup";
 import PanelLayout from "./Layout/PanelLayout";
 import SurveyBuilder from "./Pages/Panel/SurveyBuilder";
-import DashboardPage from "./Pages/Panel/DashboardPage";
 
 
 const AuthRoutes = [
@@ -30,11 +29,7 @@ const PanelRoutes = [
         element: <PanelLayout />,
         children: [
             {
-                path: "dashboard",
-                element: <DashboardPage />,
-            },
-            {
-                path: "survey/:surveyId",
+                path: "survey-builder",
                 element: <SurveyBuilder />,
             },
         ],

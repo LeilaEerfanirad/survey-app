@@ -15,16 +15,17 @@ function getJwtToken(data, callback) {
 }
 
 
-function getDataJwt(token) {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, AUTH_JWT_SECRET, (err, decoded) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(decoded);
-            }
-        });
+function getDataJwt(token, callback) {
+
+    jwt.verify(token, AUTH_JWT_SECRET, (err, decoded) => {
+        if (err) {
+            callback("error", err)
+
+        } else {
+            callback("success", decoded)
+        }
     });
+
 }
 
 

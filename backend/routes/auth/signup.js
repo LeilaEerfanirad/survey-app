@@ -7,6 +7,7 @@ const { getJwtToken } = require('../../functions/jwtHandler')
 
 router.post('/', async (req, resp) => {
     const { username, password } = req.body
+    // const captchaToken = req.headers.captchatoken
 
 
     const user = await UserModel.findOne({ username })

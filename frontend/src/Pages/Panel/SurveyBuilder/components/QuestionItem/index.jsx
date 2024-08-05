@@ -3,9 +3,10 @@ import React, { useRef, useState } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 export default function QuestionItem({ q, index, id }) {
 
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+    const myRef = useRef(0)
 
-    console.log(id);
+
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 
     const style = {
 
