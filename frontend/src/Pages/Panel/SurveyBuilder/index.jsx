@@ -19,6 +19,7 @@ import { useParams } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import changeQuestionsOrdersApi from '../../../Apis/survey/changeQuestionOrdersApi';
 import QuestionItemV2 from './components/QuestionItemV2';
+import deleteQuestionApi from '../../../Apis/questions/deleteQuestion';
 
 
 export default function SurveyBuilder() {
@@ -100,6 +101,17 @@ export default function SurveyBuilder() {
         multiChoicesAnswerModal,
         theEndModal])
 
+    const handleDeleteQuestion = (questionId) => {
+        deleteQuestionApi(questionId, surveyId)
+            .then(res => {
+
+                setQuestions(prev => prev.filter(item => item._id !== questionId))
+
+            }).catch(e => {
+
+            })
+    }
+
 
 
     return (
@@ -134,7 +146,7 @@ export default function SurveyBuilder() {
                                         const qType = item.type == 0 || item.type == 1
                                         if (!qType) {
                                             return (
-                                                <QuestionItem onClick={(modalType) => handleModal(modalType)
+                                                <QuestionItem handleDelete={handleDeleteQuestion} onClick={(modalType) => handleModal(modalType)
                                                 } id={item._id} key={item._id} index={index} data={item} />
                                             )
                                         }

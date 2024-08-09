@@ -3,6 +3,9 @@ const express = require('express')
 const router = express.Router()
 
 
+//delete question
+const deleteQuestion = require('./deleteQuestion')
+router.use("/", deleteQuestion)
 
 //post question
 const postQuestion = require('./postQuestion')
@@ -15,6 +18,8 @@ router.use("/", patchQuestion)
 //get question
 const getQuestion = require('./getQuestion')
 router.use("/", getQuestion)
+
+
 
 
 

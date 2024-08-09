@@ -3,7 +3,8 @@ import React, { useRef, useState } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { Button } from 'antd'
 import { useSearchParams } from 'react-router-dom'
-export default function QuestionItem({ id, index, data, onClick }) {
+import deleteQuestionApi from '../../../../../Apis/questions/deleteQuestion'
+export default function QuestionItem({ id, index, data, onClick, handleDelete }) {
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
         id
@@ -40,8 +41,7 @@ export default function QuestionItem({ id, index, data, onClick }) {
                     onClick(modalType)
                 }}>ویرایش</Button>
                 <Button danger onClick={() => {
-                    const modalType = data.type === 2 ? "short-answer" : data.type === 3 ? "multi-choices" : ""
-                    onClick(modalType)
+                    handleDelete(data._id)
                 }}>حذف</Button>
 
             </div>
