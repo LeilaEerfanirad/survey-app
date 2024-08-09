@@ -5,7 +5,7 @@ export default function QuestionItem({ q, index, id, data }) {
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
 
-    console.log(data);
+    // console.log(data);
 
     const style = {
 

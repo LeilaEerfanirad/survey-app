@@ -10,7 +10,7 @@ export default function WellcomeModal({ open, setOpen, data }) {
     const { surveyId } = useParams()
 
 
-    console.log(data);
+    // console.log(data);
 
 
     const formik = useFormik({

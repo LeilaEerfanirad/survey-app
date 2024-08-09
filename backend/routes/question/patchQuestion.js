@@ -4,32 +4,31 @@ const SurveyModel = require('../../models/Survey')
 
 
 
-router.get("/:surveyId/question/:questionId/:priorQuestionId", async (req, resp) => {
+router.patch("/:surveyId/question/:questionId", async (req, resp) => {
 
 
-    const { questionId, surveyId, priorQuestionId } = req.params
+    const { questionId, surveyId } = req.params
 
-    // const { prior_questionId } = req.body
+    const { prior_questionId } = req.body
 
     try {
         const survey = await SurveyModel.findOne({ _id: surveyId }).populate('questions')
 
-        const targetQuestion = survey.questions.find(item => item._id == questionId)
+        const from = survey.questions.findIndex(item => item._id.toString() === questionId)
+        const to = survey.questions.findIndex(item => item._id.toString() === prior_questionId)
 
-        const from = survey.questions.findIndex(item => item._id == questionId)
-        const to = survey.questions.findIndex(item => item._id == priorQuestionId) - 1
-
-
-        survey.questions.splice(from, 1)
-
-        survey.questions.splice(to, 0, targetQuestion);
+        console.log(from, "===from");
+        console.log(to, "===to");
 
 
 
+        const [element] = survey.questions.splice(from, 1);
 
+        survey.questions.splice(to, 0, element);
 
+        await survey.save()
 
-        return resp.json(survey.questions)
+        return resp.json(element)
 
 
 

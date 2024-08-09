@@ -16,6 +16,7 @@ import LongTextAnswerModal from './QTypeModals/LongTextAnswerModal';
 import StartEndItem from './components/StartEndItem';
 import { getSingleSurveyApi } from '../../../Apis/survey/getSingleSurvey';
 import { useParams } from 'react-router-dom';
+import patchQuestionApi from '../../../Apis/questions/patchQuestionApi';
 
 
 
@@ -74,8 +75,23 @@ export default function SurveyBuilder() {
             const originalPos = getQPosition(active.id)
             const newPos = getQPosition(over.id)
             const newArr = arrayMove(questions, originalPos, newPos)
-
             setQuestions(newArr)
+            patchQuestionApi(surveyId, {
+                questionId: survey.questions[originalPos]._id,
+                prior_questionId: survey.questions[newPos]._id
+            })
+                .then(res => {
+
+                    console.log(res);
+
+
+                }).catch(e => {
+                    console.log(e);
+
+                })
+
+
+
 
         } else {
             console.log("s bood");
@@ -117,7 +133,7 @@ export default function SurveyBuilder() {
 
                 const myquestions = res.questions.filter(item => (item.type !== 0 && item.type !== 1))
 
-                myquestions.sort((a, b) => a.order - b.order);
+                // myquestions.sort((a, b) => a.order - b.order);
 
                 setQuestions(myquestions.map(item => ({ q: item.title, id: item.order })))
 
