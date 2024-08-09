@@ -1,11 +1,9 @@
 import HttpService from "../../services/http.service";
 
 
-export default async function patchQuestionApi(surveyId, data) {
+export default async function patchQuestionApi(questionId, data) {
 
-    const { questionId, ...res } = data
-
-    const response = await HttpService.patch(`/survey/${surveyId}/question/${questionId}/`, res)
+    const response = await HttpService.patch(`/question/${questionId}`, data)
 
     return response.data
 

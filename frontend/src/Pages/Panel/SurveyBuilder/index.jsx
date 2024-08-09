@@ -16,35 +16,17 @@ import LongTextAnswerModal from './QTypeModals/LongTextAnswerModal';
 import StartEndItem from './components/StartEndItem';
 import { getSingleSurveyApi } from '../../../Apis/survey/getSingleSurvey';
 import { useParams } from 'react-router-dom';
-import patchQuestionApi from '../../../Apis/questions/patchQuestionApi';
-
+import { useSearchParams } from 'react-router-dom';
+import changeQuestionsOrdersApi from '../../../Apis/survey/changeQuestionOrdersApi';
+import QuestionItemV2 from './components/QuestionItemV2';
 
 
 export default function SurveyBuilder() {
 
     const { surveyId } = useParams()
 
-
     const [survey, setSurvey] = useState(null)
-    const [questions, setQuestions] = useState([
-        {
-            title: "sdsd",
-            order: 0
-        },
-        {
-            title: "sdsd",
-            order: 1
-        },
-        {
-            title: "sdsd",
-            order: 2
-        },
-    ])
-
-
-    const [parent, setParent] = useState(null);
-
-    const [modal, setModal] = useState("")
+    const [questions, setQuestions] = useState([])
 
     const [wellcomeModal, setWellcomeModal] = useState(false)
     const [shortAnswerModal, setShortAnswerModal] = useState(false)
@@ -54,51 +36,30 @@ export default function SurveyBuilder() {
 
 
 
-    const getQPosition = id => questions.findIndex(q => q.id === id)
+    const getQPosition = id => questions.findIndex(q => q._id === id)
 
     function handleDragEnd({ over, active }) {
-
-        // setParent(over ? over.id : null);
-
-        // if (over) {
-        //     console.log(active);
-        // }
-
-        console.log(over, active);
-
         if (active.id == over.id) return;
+        const originalPos = getQPosition(active.id)
+        const newPos = getQPosition(over.id)
+        const newArr = arrayMove(questions, originalPos, newPos)
+        setQuestions(newArr)
+        changeQuestionsOrdersApi(surveyId, {
+            questionId: survey.questions[originalPos]._id,
+            prior_questionId: survey.questions[newPos]._id
+        })
+            .then(res => {
+                getSingleSurveyApi(surveyId)
+                    .then(res => {
+                        setSurvey(res)
+                        setQuestions(res.questions.map(item => ({ ...item, id: item._id })))
+                    }).catch(e => {
+                        console.log(e);
+                    })
+            }).catch(e => {
+                console.log(e);
 
-        const { id } = over
-
-        if (typeof (active.id) === "number") {
-
-            const originalPos = getQPosition(active.id)
-            const newPos = getQPosition(over.id)
-            const newArr = arrayMove(questions, originalPos, newPos)
-            setQuestions(newArr)
-            patchQuestionApi(surveyId, {
-                questionId: survey.questions[originalPos]._id,
-                prior_questionId: survey.questions[newPos]._id
             })
-                .then(res => {
-
-                    console.log(res);
-
-
-                }).catch(e => {
-                    console.log(e);
-
-                })
-
-
-
-
-        } else {
-            console.log("s bood");
-        }
-
-
-
 
     }
 
@@ -125,22 +86,14 @@ export default function SurveyBuilder() {
 
     }
     useEffect(() => {
-
         getSingleSurveyApi(surveyId)
             .then(res => {
-
                 setSurvey(res)
-
-                const myquestions = res.questions.filter(item => (item.type !== 0 && item.type !== 1))
-
-                // myquestions.sort((a, b) => a.order - b.order);
-
-                setQuestions(myquestions.map(item => ({ q: item.title, id: item.order })))
-
-                // setQuestions(res.questions.filter(item => (item.type !== 0 && item.type !== 1)))
+                setQuestions(res.questions.map(item => ({ ...item, id: item._id })))
             }).catch(e => {
                 console.log(e);
             })
+
     }, [wellcomeModal,
         shortAnswerModal,
         longAnswerModal,
@@ -176,7 +129,17 @@ export default function SurveyBuilder() {
                             } title={"صفحه خوش آمد گویی"} />
                             <ul className='flex flex-col p-2 flex-1 gap-2 my-4 border'>
                                 {
-                                    questions.map((item, index) => (<QuestionItem data={{ ...item }} id={item.id} key={item.id} q={item.q} index={index} />))
+                                    questions.map((item, index) => {
+
+                                        const qType = item.type == 0 || item.type == 1
+                                        if (!qType) {
+                                            return (
+                                                <QuestionItem onClick={(modalType) => handleModal(modalType)
+                                                } id={item._id} key={item._id} index={index} data={item} />
+                                            )
+                                        }
+
+                                    })
                                 }
                             </ul>
                             <StartEndItem title={"صفحه پایان"} />

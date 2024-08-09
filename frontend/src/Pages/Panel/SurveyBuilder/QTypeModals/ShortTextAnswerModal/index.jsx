@@ -3,42 +3,89 @@ import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react'
 import ModalsLayout from '../ModalLayout';
 import { useFormik } from 'formik'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { patchSurveyApi } from '../../../../../Apis/survey/patchSurvey';
+import getQuestionApi from '../../../../../Apis/questions/getQuestionApi';
+import patchQuestionApi from '../../../../../Apis/questions/patchQuestionApi';
+import postQuestionApi from '../../../../../Apis/questions/postQuestionApi';
 export default function ShortTextAnswerModal({ questions, open, setOpen, data }) {
 
     const { surveyId } = useParams()
 
 
-    console.log(questions.length);
+    const [searchParams, setSearchParams] = useSearchParams()
+
+
+
+
+    useEffect(() => {
+
+        if (!open) {
+            setSearchParams({})
+        }
+
+        console.log(searchParams.get("questionId"));
+
+
+        if (searchParams.get("questionId"))
+            getQuestionApi(searchParams.get("questionId"))
+                .then(res => {
+                    console.log(res);
+                    formik.setValues(res)
+
+                }).catch(e => {
+                    console.log(e);
+
+                })
+
+    }, [open])
 
 
     const formik = useFormik({
         initialValues: {
             title: "",
             type: 2,
-            order: 0
+
 
         },
         onSubmit: (values) => {
 
+            if (searchParams.get("questionId")) {
 
-            patchSurveyApi(surveyId, { ...values, questionId: data?._id, order: data ? data.order : questions.length + 1 })
-                .then(res => {
-                    setOpen(false)
-                    formik.resetForm()
-                }).catch(e => {
-                    console.log(e);
-                })
+                patchQuestionApi(searchParams.get("questionId"), values)
+                    .then(res => {
+                        console.log(res);
+                        setOpen(false)
+                        formik.resetForm()
+
+                    }).catch(e => {
+                        console.log(e);
+
+                    })
+
+
+            } else {
+
+                postQuestionApi({ ...values, surveyId })
+                    .then(res => {
+                        setOpen(false)
+                        formik.resetForm()
+                    }).catch(e => {
+                        console.log(e);
+                    })
+
+            }
+
+
 
         }
     })
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        formik.setValues({ ...formik.values, ...data })
+    //     formik.setValues({ ...formik.values, ...data })
 
-    }, [data])
+    // }, [data])
     return (
 
         <ModalsLayout open={open} title="سوال با پاسخ کوتاه" setOpen={setOpen} onOk={formik.handleSubmit}>

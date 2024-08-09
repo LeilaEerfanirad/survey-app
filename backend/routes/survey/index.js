@@ -18,5 +18,8 @@ const patchSurvey = require('./patchSurvey')
 router.use('/', patchSurvey)
 
 
+const changeQuestionsOrders = require('./changeQuestionsOrders')
+router.use('/', changeQuestionsOrders)
+
 
 module.exports = router

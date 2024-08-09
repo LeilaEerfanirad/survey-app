@@ -18,7 +18,7 @@ export default function WellcomeModal({ open, setOpen, data }) {
             title: "",
             enter_text: "",
             type: 0,
-            order: -1
+            order: 0
 
         },
         onSubmit: (values) => {

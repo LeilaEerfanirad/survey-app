@@ -17,7 +17,7 @@ router.use("/survey", survey)
 
 //question
 const question = require('./question')
-router.use("/survey", question)
+router.use("/question", question)
 
 
 

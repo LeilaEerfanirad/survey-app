@@ -1,5 +1,5 @@
 import TextArea from 'antd/es/input/TextArea'
-import React from 'react'
+import React, { useEffect } from 'react'
 import ModalsLayout from '../ModalLayout'
 import { useFormik } from 'formik'
 import { patchSurveyApi } from '../../../../../Apis/survey/patchSurvey'
@@ -7,10 +7,39 @@ import { Button, Input } from 'antd'
 import ChoiceCard from './ChoiceCard'
 import ChoiceItemCard from '../../../../../Components/ChoiceItemCard'
 import { useParams } from 'react-router-dom'
-
+import getQuestionApi from '../../../../../Apis/questions/getQuestionApi'
+import { useSearchParams } from 'react-router-dom'
+import patchQuestionApi from '../../../../../Apis/questions/patchQuestionApi'
+import postQuestionApi from '../../../../../Apis/questions/postQuestionApi'
 export default function MultiChoicesAnswerModal({ open, setOpen, data, questions }) {
 
     const { surveyId } = useParams()
+
+    const [searchParams, setSearchParams] = useSearchParams()
+
+
+
+
+    useEffect(() => {
+
+        if (!open) {
+            setSearchParams({})
+        }
+
+        console.log(searchParams.get("questionId"));
+
+
+        if (searchParams.get("questionId"))
+            getQuestionApi(searchParams.get("questionId"))
+                .then(res => {
+                    formik.setValues(res)
+
+                }).catch(e => {
+                    console.log(e);
+
+                })
+
+    }, [open])
 
 
 
@@ -18,20 +47,35 @@ export default function MultiChoicesAnswerModal({ open, setOpen, data, questions
         initialValues: {
             title: "",
             type: 3,
-            order: 10,
+            order: questions.length + 2,
             choices: []
         },
         onSubmit: (values) => {
+            if (searchParams.get("questionId")) {
 
-            patchSurveyApi(surveyId, { ...values, questionId: data?._id, order: data ? data.order : questions?.length + 1 })
-                .then(res => {
-                    console.log(res);
+                patchQuestionApi(searchParams.get("questionId"), values)
+                    .then(res => {
+                        console.log(res);
+                        setOpen(false)
+                        formik.resetForm()
 
-                    // setOpen(false)
-                    // formik.resetForm()
-                }).catch(e => {
-                    console.log(e);
-                })
+                    }).catch(e => {
+                        console.log(e);
+
+                    })
+
+
+            } else {
+
+                postQuestionApi({ ...values, surveyId })
+                    .then(res => {
+                        setOpen(false)
+                        formik.resetForm()
+                    }).catch(e => {
+                        console.log(e);
+                    })
+
+            }
         }
 
     })
