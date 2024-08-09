@@ -1,12 +1,11 @@
 import { useSortable } from '@dnd-kit/sortable'
 import React, { useRef, useState } from 'react'
 import { CSS } from '@dnd-kit/utilities'
-export default function QuestionItem({ q, index, id }) {
-
-    const myRef = useRef(0)
-
+export default function QuestionItem({ q, index, id, data }) {
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+
+    console.log(data);
 
     const style = {
 

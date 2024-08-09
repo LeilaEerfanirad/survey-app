@@ -63,7 +63,7 @@ export default function PanelLayout() {
                     } `}
             >
                 <Header />
-                <section className="border overflow-hidden border-purple-500 flex-1">
+                <section className="border overflow-hidden flex-1">
 
                     <Outlet />
                 </section>

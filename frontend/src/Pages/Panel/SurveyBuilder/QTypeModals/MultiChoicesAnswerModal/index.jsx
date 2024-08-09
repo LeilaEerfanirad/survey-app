@@ -1,26 +1,104 @@
 import TextArea from 'antd/es/input/TextArea'
 import React from 'react'
 import ModalsLayout from '../ModalLayout'
+import { useFormik } from 'formik'
+import { patchSurveyApi } from '../../../../../Apis/survey/patchSurvey'
+import { Button, Input } from 'antd'
+import ChoiceCard from './ChoiceCard'
+import ChoiceItemCard from '../../../../../Components/ChoiceItemCard'
+import { useParams } from 'react-router-dom'
 
-export default function MultiChoicesAnswerModal({ open, setOpen }) {
+export default function MultiChoicesAnswerModal({ open, setOpen, data, questions }) {
+
+    const { surveyId } = useParams()
+
+
+
+    const formik = useFormik({
+        initialValues: {
+            title: "",
+            type: 3,
+            order: 10,
+            choices: []
+        },
+        onSubmit: (values) => {
+
+            patchSurveyApi(surveyId, { ...values, questionId: data?._id, order: data ? data.order : questions?.length + 1 })
+                .then(res => {
+                    console.log(res);
+
+                    // setOpen(false)
+                    // formik.resetForm()
+                }).catch(e => {
+                    console.log(e);
+                })
+        }
+
+    })
+
+    const handleChangeChoice = (value, index) => {
+
+        console.log(value, index);
+
+        const newChoices = formik.values.choices.map((item, i) => {
+            if (index === i) {
+                item.name = value
+                return item
+            } else {
+                return item
+            }
+        })
+
+        formik.setFieldValue("choices", newChoices)
+
+
+    }
+
+
+
+
     return (
-        <ModalsLayout title="سوال چند گزینه ای" open={open} setOpen={setOpen}>
-            <div className="col-span-3 flex flex-col  border h-full">
-                <div className=" flex p-2">
-                    <h3>سوال 1</h3>
-                </div>
-                <hr className="border" />
-                <div className="flex-1 max-h-full flex flex-col gap-2 overflow-y-auto  pt-4 px-2">
-                    <div className="flex flex-col gap-2">
-                        <h3>سوال</h3>
-                        <TextArea rows={4} placeholder="متن سوال" maxLength={6} />
+        <ModalsLayout title="سوال چند گزینه ای" onOk={formik.handleSubmit} open={open} setOpen={setOpen}>
+            <div className="grid grid-cols-12 border h-full overflow-hidden">
+                <div className='col-span-3 overflow-y-auto border h-full p-1'>
+                    <div className='flex flex-col gap-2'>
+                        <label className='font-bold' htmlFor="">سوال</label>
+                        <TextArea onChange={formik.handleChange} name='title' value={formik.values.title} rows={8} placeholder="متن سوال" />
+
                     </div>
-                    <hr className="border" />
-                    <div className="flex flex-col gap-2">
-                        <h3>گزینه ها</h3>
+                    <div className='flex flex-col gap-2 mt-4 w-full'>
+                        <div className='flex justify-between'>
+                            <label className='font-bold' htmlFor="">گزینه ها</label>
+                            <Button onClick={() => formik.setFieldValue("choices", [...formik.values.choices, {
+                                name: ""
+                            }])} type='primary'>+</Button>
+                        </div>
+                        <div className='flex flex-col gap-1'>
+                            {
+                                formik.values.choices.map((item, index) => <ChoiceCard value={item.name} handleChangeChoice={handleChangeChoice} index={index} handleDelete={(index) => {
+                                    formik.values.choices.splice(index, 1)
+                                    formik.setFieldValue("choices", formik.values.choices)
+                                }} />)
+                            }
+
+                        </div>
+
+
                     </div>
                 </div>
-                <div className="h-16 bg-orange-400"></div>
+                <div className='col-span-9 border h-full'>
+                    <div className='h-full gap-4 flex flex-col justify-center px-4'>
+                        <p className=' max-w-sm'> سوال: {formik.values.title}</p>
+                        <div className='flex flex-col gap-2'>
+                            {
+                                formik.values.choices.map((item, index) => item.name && <ChoiceItemCard checked={index % 2 === 0} index={index} name={item.name} />)
+                            }
+
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </ModalsLayout>
 

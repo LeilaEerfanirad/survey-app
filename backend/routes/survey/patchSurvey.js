@@ -3,6 +3,7 @@ const { getDataJwt } = require('../../functions/jwtHandler')
 const router = express.Router()
 const SurveyModel = require('../../models/Survey')
 const QuestionModel = require('../../models/Question')
+const ChoiceModel = require('../../models/Choice')
 
 
 
@@ -39,23 +40,58 @@ router.patch('/:surveyId', async (req, resp) => {
 
                 } else {
 
-                    const newQuestion = await QuestionModel.create(req.body)
-                    survey.questions = [...survey.questions, newQuestion._id]
-                    survey.save()
 
-                    return resp.json({
-                        statue: "success",
-                        msg: "سوال ذخیره شد"
-                    })
+                    switch (type) {
+                        case 1:
+                            {
+                                const newQuestion = await QuestionModel.create(req.body)
+                                survey.questions = [...survey.questions, newQuestion._id]
+                                survey.save()
+
+                                return resp.json({
+                                    statue: "success",
+                                    msg: "سوال ذخیره شد"
+                                })
+                            }
+
+                        case 2:
+                            {
+
+                                const newQuestion = await QuestionModel.create(req.body)
+                                survey.questions = [...survey.questions, newQuestion._id]
+                                survey.save()
+
+                                return resp.json({
+                                    statue: "success",
+                                    msg: "سوال ذخیره شد"
+                                })
+                            }
+
+                        case 3: {
+
+                            const { choices, ...res } = req.body
+
+                            const savedChoices = await ChoiceModel.insertMany(choices);
+
+                            const choiceIds = savedChoices.map(choice => choice._id);
 
 
+                            const newQuestion = await QuestionModel.create({
+                                ...res,
+                                choices: choiceIds
+                            });
 
+                            survey.questions = [...survey.questions, newQuestion._id]
+                            await newQuestion.save()
+                            await survey.save()
+
+                            return resp.json(req.body)
+                        }
+                        default:
+                            break;
+                    }
 
                 }
-
-
-
-
 
             } else {
                 return resp.json({

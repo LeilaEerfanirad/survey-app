@@ -4,7 +4,8 @@ const QuestionSchema = new mongoose.Schema({
     type: { type: Number },
     order: { type: Number },
     enter_text: { type: String },
-    answer_type: { type: Number }
+    answer_type: { type: Number },
+    choices: [{ type: mongoose.Schema.Types.ObjectId, ref: "Choice" }]
 })
 
 const Question = mongoose.model('Question', QuestionSchema);

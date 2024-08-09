@@ -7,6 +7,7 @@ export default function ModalsLayout({ open, setOpen, title, children, onOk }) {
     const element = document.querySelectorAll('div[tabindex="-1"]');
     element.forEach(item => {
       item.style.height = '100%';
+      item.style.overflow = 'hidden';
     })
   }, [open]);
   return (
@@ -21,7 +22,8 @@ export default function ModalsLayout({ open, setOpen, title, children, onOk }) {
             .ant-modal {
             padding-bottom:0px;
             width:100% !IMPORTANT;
-            margin-top:20px;
+             padding-top:20px;
+             padding-bottom:20px;
             flex:1;
             height:100%;
             margin-bottom:20px;
@@ -31,9 +33,11 @@ export default function ModalsLayout({ open, setOpen, title, children, onOk }) {
             height:100%;
             display:flex;
             flex-direction:column;
+            overflow:hidden;
             }
             .ant-modal-body{
             flex:1;
+            overflow:hidden;
             }
             `}
       </style>
