@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { Button } from 'antd'
 import { useSearchParams } from 'react-router-dom'
 import deleteQuestionApi from '../../../../../Apis/questions/deleteQuestion'
-export default function QuestionItem({ id, index, data, onClick, handleDelete }) {
+export default function QuestionItem({ id, index, data, onClick, handleDelete, conditionModla }) {
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
         id
@@ -30,11 +30,11 @@ export default function QuestionItem({ id, index, data, onClick, handleDelete })
             </div>
             <div className='flex gap-2'>
                 <Button onClick={() => {
-                    const modalType = data.type === 2 ? "short-answer" : data.type === 3 ? "multi-choices" : ""
-                    onClick(modalType)
+                    setSearchParams({ questionId: data._id })
+                    conditionModla()
+
                 }}>افزودن شرط</Button>
 
-                {/* Button: Separate from drag handle */}
                 <Button onClick={() => {
                     const modalType = data.type === 2 ? "short-answer" : data.type === 3 ? "multi-choices" : ""
                     setSearchParams({ questionId: data._id })

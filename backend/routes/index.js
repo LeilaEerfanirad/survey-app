@@ -9,8 +9,6 @@ router.use("/signup", signupRout)
 const loginRout = require("./auth/login")
 router.use("/login", loginRout)
 
-
-
 //survey
 const survey = require('./survey')
 router.use("/survey", survey)

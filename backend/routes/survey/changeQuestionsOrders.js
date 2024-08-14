@@ -17,9 +17,6 @@ router.post("/:surveyId/change-orders", async (req, resp) => {
         const from = survey.questions.findIndex(item => item._id.toString() === questionId)
         const to = survey.questions.findIndex(item => item._id.toString() === prior_questionId)
 
-        console.log(from, "===from");
-        console.log(to, "===to");
-
 
 
         const [element] = survey.questions.splice(from, 1);

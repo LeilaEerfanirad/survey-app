@@ -20,6 +20,7 @@ import { useSearchParams } from 'react-router-dom';
 import changeQuestionsOrdersApi from '../../../Apis/survey/changeQuestionOrdersApi';
 import QuestionItemV2 from './components/QuestionItemV2';
 import deleteQuestionApi from '../../../Apis/questions/deleteQuestion';
+import ConditionsModal from './ConditionsModal';
 
 
 export default function SurveyBuilder() {
@@ -34,6 +35,7 @@ export default function SurveyBuilder() {
     const [longAnswerModal, setLongAnswerModal] = useState(false)
     const [multiChoicesAnswerModal, setMultiChoicesAnswerModal] = useState(false)
     const [theEndModal, setTheEndModal] = useState(false)
+    const [conditionModal, setConditionModal] = useState(false)
 
 
 
@@ -116,6 +118,7 @@ export default function SurveyBuilder() {
 
     return (
         <>
+            <ConditionsModal open={conditionModal} setOpen={setConditionModal} />
             <WellcomeModal data={survey?.questions.find(item => item.type === 0)} open={wellcomeModal} setOpen={setWellcomeModal} />
             <ShortTextAnswerModal questions={questions} open={shortAnswerModal} setOpen={setShortAnswerModal} />
             <MultiChoicesAnswerModal questions={questions} open={multiChoicesAnswerModal} setOpen={setMultiChoicesAnswerModal} />
@@ -146,7 +149,7 @@ export default function SurveyBuilder() {
                                         const qType = item.type == 0 || item.type == 1
                                         if (!qType) {
                                             return (
-                                                <QuestionItem handleDelete={handleDeleteQuestion} onClick={(modalType) => handleModal(modalType)
+                                                <QuestionItem handleDelete={handleDeleteQuestion} conditionModla={() => setConditionModal(true)} onClick={(modalType) => handleModal(modalType)
                                                 } id={item._id} key={item._id} index={index} data={item} />
                                             )
                                         }
