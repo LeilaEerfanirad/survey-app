@@ -118,7 +118,7 @@ export default function SurveyBuilder() {
 
     return (
         <>
-            <ConditionsModal open={conditionModal} setOpen={setConditionModal} />
+            <ConditionsModal questions={questions} open={conditionModal} setOpen={setConditionModal} />
             <WellcomeModal data={survey?.questions.find(item => item.type === 0)} open={wellcomeModal} setOpen={setWellcomeModal} />
             <ShortTextAnswerModal questions={questions} open={shortAnswerModal} setOpen={setShortAnswerModal} />
             <MultiChoicesAnswerModal questions={questions} open={multiChoicesAnswerModal} setOpen={setMultiChoicesAnswerModal} />

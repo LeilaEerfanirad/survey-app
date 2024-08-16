@@ -10,7 +10,12 @@ router.get("/:questionId", async (req, resp) => {
 
     try {
 
-        const question = await QuestionModel.findOne({ _id: questionId }).populate('choices')
+        const question = await QuestionModel.findOne({ _id: questionId }).populate('choices').populate({
+            path: 'edges',
+            populate: {
+                path: 'conditions'
+            }
+        });
 
         return resp.json(question)
 

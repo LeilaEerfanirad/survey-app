@@ -17,7 +17,9 @@ router.use("/survey", survey)
 const question = require('./question')
 router.use("/question", question)
 
-
+//edge
+const edge = require('./edge')
+router.use("/edge", edge)
 
 
 
