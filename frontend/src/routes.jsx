@@ -5,6 +5,7 @@ import SignupPage from "./Pages/Signup";
 import PanelLayout from "./Layout/PanelLayout";
 import SurveyBuilder from "./Pages/Panel/SurveyBuilder";
 import DashboardPage from "./Pages/Panel/DashboardPage";
+import SurveyPage from "./Pages/Survey";
 
 
 const AuthRoutes = [
@@ -20,6 +21,7 @@ const AuthRoutes = [
                 path: "/signup",
                 element: <SignupPage />,
             },
+
         ],
     },
 ];
@@ -41,9 +43,28 @@ const PanelRoutes = [
     },
 ];
 
+const SurveyRoutes = [
+
+    {
+        path: "/survey/:surveyId",
+        element: <SurveyPage />,
+        // children: [
+        //     {
+        //         path: "dashboard",
+        //         element: <DashboardPage />,
+        //     },
+        //     {
+        //         path: "survey/:surveyId",
+        //         element: <SurveyBuilder />,
+        //     },
+        // ],
+    },
+
+]
 
 
-const AppRoutes = createBrowserRouter([...AuthRoutes, ...PanelRoutes]);
+
+const AppRoutes = createBrowserRouter([...AuthRoutes, ...PanelRoutes, ...SurveyRoutes]);
 
 
 export default function Routes() {

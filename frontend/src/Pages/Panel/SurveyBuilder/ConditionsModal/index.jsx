@@ -48,6 +48,7 @@ export default function ConditionsModal({ open, setOpen, questions }) {
             postEdgesApi(values)
                 .then(res => {
                     console.log(res);
+                    setOpen(false)
 
                 }).catch(e => {
                     console.log(e);

@@ -4,8 +4,12 @@ import { useMediaQuery } from "@react-hook/media-query";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from 'antd'
+
 
 import { toggleCompactDrawer, toggleOpenDrawer } from '../../../../redux/features/settingsSlice'
+import { EyeIcon, UserIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 export default function Header() {
     const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -41,16 +45,13 @@ export default function Header() {
 
     return (
         <header className="shadow-md sticky top-0 left-0 duration-200 z-40">
-            <div className="flex items-center justify-between bg-white p-4">
+            <div className="flex items-center justify-between bg-white p-4 border border-red-400">
                 <Bars3Icon
                     onClick={handleToggleDrawer}
                     className="w-8 h-8 text-blue-500 cursor-pointer mx-2"
                 />
-                <div className="flex justify-between items-center">
-                    <h1 className="md:text-left text-gray-700 font-semibold">
-                        {/* {lo ? userData?.username : ""} */}
-                    </h1>
-                </div>
+
+
             </div>
         </header>
     );

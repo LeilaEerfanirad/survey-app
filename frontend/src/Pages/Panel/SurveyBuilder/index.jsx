@@ -15,12 +15,14 @@ import TheEndModal from './QTypeModals/TheEndModal';
 import LongTextAnswerModal from './QTypeModals/LongTextAnswerModal';
 import StartEndItem from './components/StartEndItem';
 import { getSingleSurveyApi } from '../../../Apis/survey/getSingleSurvey';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import changeQuestionsOrdersApi from '../../../Apis/survey/changeQuestionOrdersApi';
 import QuestionItemV2 from './components/QuestionItemV2';
 import deleteQuestionApi from '../../../Apis/questions/deleteQuestion';
 import ConditionsModal from './ConditionsModal';
+import { EyeIcon, UserIcon } from '@heroicons/react/24/outline';
+import { Button } from 'antd';
 
 
 export default function SurveyBuilder() {
@@ -125,6 +127,7 @@ export default function SurveyBuilder() {
             <LongTextAnswerModal open={longAnswerModal} setOpen={setLongAnswerModal} />
             <TheEndModal open={theEndModal} setOpen={setTheEndModal} />
             <div className="w-full h-full flex relative overflow-hidden border-red-600 border">
+
                 <div className=" flex bg-slate-100 flex-col gap-3 h-full px-8 py-4  border overflow-y-scroll">
 
                     < QuestionTypeButton title={"صفحه خوش آمد گویی"} id={"well-come"} handleModal={handleModal} />
@@ -136,10 +139,20 @@ export default function SurveyBuilder() {
                     <QuestionTypeButton title={"صفحه پایان"} id={"the-end"} handleModal={handleModal} />
                 </div>
                 <DndContext onDragEnd={handleDragEnd}>
+
                     <SortableContext items={questions} strategy={verticalListSortingStrategy}>
 
 
                         <div className="border flex-1 flex flex-col h-full p-4  overflow-y-scroll overflow-x-hidden">
+                            <div className="flex items-center gap-2">
+                                <Link to={"/survey/" + surveyId} target='_blank'>
+                                    <Button type="primary">
+
+                                        <EyeIcon width={24} />
+                                    </Button>
+                                </Link>
+                                <UserIcon width={24} />
+                            </div>
                             <StartEndItem onClick={() => handleModal("well-come")} data={survey?.questions.find(item => item.type === 0)
                             } title={"صفحه خوش آمد گویی"} />
                             <ul className='flex flex-col p-2 flex-1 gap-2 my-4 border'>

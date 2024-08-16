@@ -16,13 +16,25 @@ router.get("/:surveyId", async (req, resp) => {
 
         const { userId } = await getDataJwt(token)
 
-        const survey = await SurveyModel.findOne({ _id: surveyId }).populate({
-            path: 'questions',
-            populate: {
-                path: 'choices',
-                model: 'Choice'
+        const survey = await SurveyModel.findOne({ _id: surveyId }).populate(
+            {
+                path: 'questions',
+                populate: [
+                    {
+                        path: 'choices',
+                        model: 'Choice',
+                    },
+                    {
+                        path: 'edges',
+                        model: 'Edge',
+                        populate: {
+                            path: 'conditions',
+                            model: 'Condition' // Ensure to specify the model if needed
+                        }
+                    }
+                ]
             }
-        })
+        )
 
 
         // const survey = user.surveies.find(item => item._id.toString() === surveyId)
