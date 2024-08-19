@@ -16,6 +16,9 @@ router.get("/", async (req, resp) => {
 
         const user = await UserModel.findOne({ _id: userId }).populate('surveies')
 
+        console.log(user);
+
+
         return resp.json({
             surveies: user.surveies
         })

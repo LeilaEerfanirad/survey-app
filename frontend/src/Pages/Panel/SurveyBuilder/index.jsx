@@ -29,6 +29,9 @@ export default function SurveyBuilder() {
 
     const { surveyId } = useParams()
 
+    const [searchParams, setSearchParams] = useSearchParams()
+
+
     const [survey, setSurvey] = useState(null)
     const [questions, setQuestions] = useState([])
 
@@ -125,7 +128,7 @@ export default function SurveyBuilder() {
             <ShortTextAnswerModal questions={questions} open={shortAnswerModal} setOpen={setShortAnswerModal} />
             <MultiChoicesAnswerModal questions={questions} open={multiChoicesAnswerModal} setOpen={setMultiChoicesAnswerModal} />
             <LongTextAnswerModal open={longAnswerModal} setOpen={setLongAnswerModal} />
-            <TheEndModal open={theEndModal} setOpen={setTheEndModal} />
+            <TheEndModal data={survey?.questions.find(item => item.type === 1)} open={theEndModal} setOpen={setTheEndModal} />
             <div className="w-full h-full flex relative overflow-hidden border-red-600 border">
 
                 <div className=" flex bg-slate-100 flex-col gap-3 h-full px-8 py-4  border overflow-y-scroll">
@@ -147,13 +150,16 @@ export default function SurveyBuilder() {
                             <div className="flex items-center gap-2">
                                 <Link to={"/survey/" + surveyId} target='_blank'>
                                     <Button type="primary">
-
                                         <EyeIcon width={24} />
                                     </Button>
                                 </Link>
                                 <UserIcon width={24} />
                             </div>
-                            <StartEndItem onClick={() => handleModal("well-come")} data={survey?.questions.find(item => item.type === 0)
+                            <StartEndItem onClick={() => {
+                                handleModal("well-come")
+                                const wellcomeQuestion = survey?.questions.find(item => item.type === 0)
+                                setSearchParams({ questionId: wellcomeQuestion._id })
+                            }} data={survey?.questions.find(item => item.type === 0)
                             } title={"صفحه خوش آمد گویی"} />
                             <ul className='flex flex-col p-2 flex-1 gap-2 my-4 border'>
                                 {
@@ -170,7 +176,12 @@ export default function SurveyBuilder() {
                                     })
                                 }
                             </ul>
-                            <StartEndItem title={"صفحه پایان"} />
+                            <StartEndItem title={"صفحه پایان"} onClick={() => {
+                                handleModal("the-end")
+                                const wellcomeQuestion = survey?.questions.find(item => item.type === 1)
+                                setSearchParams({ questionId: wellcomeQuestion._id })
+                            }} data={survey?.questions.find(item => item.type === 1)
+                            } />
                         </div>
                     </SortableContext>
                 </DndContext>

@@ -52,6 +52,7 @@ export default function ShortTextAnswerModal({ questions, open, setOpen, data })
 
             if (searchParams.get("questionId")) {
 
+
                 patchQuestionApi(searchParams.get("questionId"), values)
                     .then(res => {
                         console.log(res);
@@ -65,6 +66,8 @@ export default function ShortTextAnswerModal({ questions, open, setOpen, data })
 
 
             } else {
+
+                const surveyQuestion = questions.filter(item => (item.type !== 0 && item.type !== 1));
 
                 postQuestionApi({ ...values, surveyId })
                     .then(res => {

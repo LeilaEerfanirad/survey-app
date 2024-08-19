@@ -17,6 +17,30 @@ router.patch("/:questionId", async (req, resp) => {
 
         switch (type) {
             //short answer
+            case 0: {
+
+                const { title, enter_text } = req.body
+
+                question.title = title
+                question.enter_text = enter_text
+
+                question.save()
+
+                return resp.json(question)
+
+            }
+            case 1: {
+
+                const { title } = req.body
+
+                question.title = title
+
+                question.save()
+
+                return resp.json(question)
+
+            }
+
             case 2: {
                 const { title } = req.body
 

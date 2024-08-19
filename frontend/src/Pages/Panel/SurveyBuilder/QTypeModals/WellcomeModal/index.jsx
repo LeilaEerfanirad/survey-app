@@ -3,11 +3,16 @@ import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect, useState } from 'react'
 import ModalsLayout from '../ModalLayout';
 import { useFormik } from 'formik'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { patchSurveyApi } from '../../../../../Apis/survey/patchSurvey';
+import postQuestionApi from '../../../../../Apis/questions/postQuestionApi';
+import patchQuestionApi from '../../../../../Apis/questions/patchQuestionApi';
 export default function WellcomeModal({ open, setOpen, data }) {
 
     const { surveyId } = useParams()
+
+    const [searchParams, setSearchParams] = useSearchParams()
+
 
 
     // console.log(data);
@@ -23,18 +28,48 @@ export default function WellcomeModal({ open, setOpen, data }) {
         },
         onSubmit: (values) => {
 
-            console.log(values);
-            patchSurveyApi(surveyId, { ...values, questionId: data?._id })
-                .then(res => {
-                    setOpen(false)
-                }).catch(e => {
-                    console.log(e);
-                })
+
+            if (searchParams.get("questionId")) {
+
+
+                patchQuestionApi(searchParams.get("questionId"), values)
+                    .then(res => {
+                        console.log(res);
+                        setOpen(false)
+                        formik.resetForm()
+
+                    }).catch(e => {
+                        console.log(e);
+
+                    })
+
+
+            } else {
+
+                postQuestionApi({ ...values, surveyId })
+                    .then(res => {
+                        setOpen(false)
+                    }).catch(e => {
+                        console.log(e);
+                    })
+
+            }
+
 
         }
     })
 
     useEffect(() => {
+
+        if (!open) {
+            setSearchParams({})
+        }
+
+    }, [open])
+
+    useEffect(() => {
+
+
 
         formik.setValues({ ...formik.values, ...data })
 

@@ -8,23 +8,32 @@ router.delete('/:questionId', async (req, resp) => {
     const { surveyId } = req.body;
 
     try {
-        // Step 1: Delete the question from the database
+        const survey = await SurveyModel.findOne({ _id: surveyId })
+
         const deletedQuestion = await QuestionModel.findByIdAndDelete(questionId);
 
-        // if (!deletedQuestion) {
-        //     return resp.status(404).json({ message: 'Question not found' });
-        // }
+        const newQuestionIds = survey.questions.filter(item => item.toString() !== questionId)
 
-        // Step 2: Remove the question's _id from the survey's questions array
-        const survey = await SurveyModel.findByIdAndUpdate(
-            surveyId,
-            { $pull: { questions: questionId } },  // $pull removes the questionId from the questions array
-            { new: true } // Return the updated survey document
-        );
+        survey.questions = newQuestionIds
 
-        // if (!survey) {
-        //     return resp.status(404).json({ message: 'Survey not found' });
-        // }
+        survey.save()
+
+        await Promise.all(survey.questions.map(async (item, index) => {
+            const question = await QuestionModel.findOne({ _id: item });
+
+            // Update the final_destination of the previous question
+            if (index > 0) {
+                const previousQuestion = await QuestionModel.findOne({ _id: survey.questions[index - 1] });
+                previousQuestion.final_destination = question._id;
+                await previousQuestion.save();
+            }
+
+            // If this is the last question, its final_destination should be empty
+            if (index === survey.questions.length - 1) {
+                question.final_destination = "";
+                await question.save();
+            }
+        }));
 
         return resp.status(200).json({
             message: 'Question deleted successfully and removed from survey',
@@ -35,5 +44,6 @@ router.delete('/:questionId', async (req, resp) => {
         return resp.status(500).json({ message: 'Internal server error' });
     }
 });
+
 
 module.exports = router;

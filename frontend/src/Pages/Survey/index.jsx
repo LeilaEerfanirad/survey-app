@@ -27,8 +27,8 @@ export default function SurveyPage() {
         getSingleSurveyApi(surveyId)
             .then(res => {
                 setSurvey(res)
-                setQuestions(res.questions.map(item => (!item.type === 0) || (!item.type === 1)))
-                setQuestion(res.questions[0])
+                setQuestions(res.questions.map(item => (!item.type === 0) && (!item.type === 1)))
+                setQuestion(res.questions.find(item => item.type === 0))
             }).catch(e => {
                 console.log(e);
             })

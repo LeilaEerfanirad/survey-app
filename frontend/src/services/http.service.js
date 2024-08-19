@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import { BASE_URL } from '../configs/variables.config';
 // import { history } from './history.service';
-axios.defaults.baseURL = `http://localhost:3000/api`;
+axios.defaults.baseURL = `http://localhost:3200/api`;
 
 const HttpService = axios.create();
 

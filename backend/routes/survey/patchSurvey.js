@@ -44,14 +44,7 @@ router.patch('/:surveyId', async (req, resp) => {
                     switch (type) {
                         case 0:
                             {
-                                const newQuestion = await QuestionModel.create(req.body)
-                                survey.questions = [...survey.questions, newQuestion._id]
-                                survey.save()
 
-                                return resp.json({
-                                    statue: "success",
-                                    msg: "سوال ذخیره شد"
-                                })
                             }
 
                         case 2:
