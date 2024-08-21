@@ -10,6 +10,9 @@ router.post("/:surveyId/change-orders", async (req, resp) => {
     try {
         const survey = await SurveyModel.findOne({ _id: surveyId }).populate('questions');
 
+        const startId = survey.questions.filter(item => item.type == 0).map(item => item._id)[0]
+        const endId = survey.questions.filter(item => item.type == 1).map(item => item._id)[0]
+
         const from = survey.questions.findIndex(item => item._id.toString() === questionId);
         const to = survey.questions.findIndex(item => item._id.toString() === prior_questionId);
 
@@ -22,18 +25,25 @@ router.post("/:surveyId/change-orders", async (req, resp) => {
         // Save the survey with the new order
         await survey.save();
 
+        const questionIds = survey.questions.filter(item => item.type != 0 && item.type != 1).map(item => item._id)
+
+
         // Update the final_destination fields for the reordered questions
-        await Promise.all(survey.questions.map(async (item, index) => {
+        await Promise.all(questionIds.map(async (item, index) => {
             const question = await QuestionModel.findOne({ _id: item._id });
 
-            if (index < survey.questions.length - 1) {
-                question.final_destination = survey.questions[index + 1]._id;
+            if (index < questionIds.length - 1) {
+                question.final_destination = questionIds[index + 1]._id;
             } else {
                 question.final_destination = ""; // Last question has no final_destination
             }
 
             await question.save();
         }));
+
+        survey.questions = [startId, ...questionIds, endId]
+
+        survey.save()
 
         return resp.json(survey.questions);
 

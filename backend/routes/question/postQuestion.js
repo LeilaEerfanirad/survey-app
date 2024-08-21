@@ -23,30 +23,6 @@ router.post("/", async (req, resp) => {
                 survey.questions = [newQuestion._id, ...survey.questions]
                 survey.save()
 
-
-                await Promise.all(survey.questions.map(async (item, index) => {
-                    const question = await QuestionModel.findOne({ _id: item });
-
-                    // Update the final_destination of the previous question
-                    if (index > 0) {
-                        const previousQuestion = await QuestionModel.findOne({ _id: survey.questions[index - 1] });
-
-                        if (previousQuestion) {
-
-                            previousQuestion.final_destination = question ? question._id : "";
-                            await previousQuestion.save();
-                        }
-                    }
-
-                    // If this is the last question, its final_destination should be empty
-                    if (index === survey.questions.length - 1) {
-                        if (question) {
-                            question.final_destination = "";
-                            await question.save();
-                        }
-                    }
-                }));
-
                 return resp.json({
                     statue: "success",
                     msg: "سوال ذخیره شد"
@@ -56,32 +32,6 @@ router.post("/", async (req, resp) => {
                 const newQuestion = await QuestionModel.create(req.body)
                 survey.questions = [...survey.questions, newQuestion._id]
                 survey.save()
-
-                await Promise.all(survey.questions.map(async (item, index) => {
-                    const question = await QuestionModel.findOne({ _id: item });
-
-                    // Update the final_destination of the previous question
-                    if (index > 0) {
-                        const previousQuestion = await QuestionModel.findOne({ _id: survey.questions[index - 1] });
-
-                        if (previousQuestion) {
-
-                            previousQuestion.final_destination = question ? question._id : "";
-                            await previousQuestion.save();
-                        }
-                    }
-
-                    // If this is the last question, its final_destination should be empty
-                    if (index === survey.questions.length - 1) {
-                        if (question) {
-                            question.final_destination = "";
-                            await question.save();
-                        }
-                    }
-                }));
-
-
-
                 return resp.json({
                     statue: "success",
                     msg: "سوال ذخیره شد"
@@ -90,49 +40,39 @@ router.post("/", async (req, resp) => {
 
 
             case 2: {
-                const surveyWithQuestions = await SurveyModel.findOne({ _id: surveyId }).populate('questions')
                 const newQuestion = await QuestionModel.create(req.body);
 
-                const endQuestionIndex = surveyWithQuestions.questions.findIndex(item => item.type === 1)
-                const startQuestionIndex = surveyWithQuestions.questions.findIndex(item => item.type === 0)
-
-                if (endQuestionIndex !== -1) {
-                    const [endQuestionId] = survey.questions.splice(endQuestionIndex, 1)
-                    survey.questions = [startQuestionId, ...survey.questions, newQuestion._id, endQuestionId];
-
-                }
-
-                const [startQuestionId] = survey.questions.splice(startQuestionIndex, 1)
-
-                survey.questions = [startQuestionId, ...survey.questions, newQuestion._id, endQuestionId];
+                survey.questions = [...survey.questions, newQuestion._id];
 
                 await survey.save();
 
+                const surveyWithQuestions = await SurveyModel.findOne({ _id: surveyId }).populate('questions')
 
+                const startId = surveyWithQuestions.questions.filter(item => item.type == 0).map(item => item._id)[0]
+                const endId = surveyWithQuestions.questions.filter(item => item.type == 1).map(item => item._id)[0]
 
+                const questionIds = surveyWithQuestions.questions.filter(item => item.type != 0 && item.type != 1).map(item => item._id)
 
-                await Promise.all(survey.questions.map(async (item, index) => {
+                await Promise.all(questionIds.map(async (item, index) => {
                     const question = await QuestionModel.findOne({ _id: item });
 
                     // Update the final_destination of the previous question
                     if (index > 0) {
-                        const previousQuestion = await QuestionModel.findOne({ _id: survey.questions[index - 1] });
-
-                        if (previousQuestion) {
-
-                            previousQuestion.final_destination = question ? question._id : "";
-                            await previousQuestion.save();
-                        }
+                        const previousQuestion = await QuestionModel.findOne({ _id: questionIds[index - 1] });
+                        previousQuestion.final_destination = question ? question._id : "";
+                        await previousQuestion.save();
                     }
-
                     // If this is the last question, its final_destination should be empty
-                    if (index === survey.questions.length - 1) {
-                        if (question) {
-                            question.final_destination = "";
-                            await question.save();
-                        }
+                    if (index === questionIds.length - 1) {
+                        question.final_destination = "";
+                        await question.save();
+
                     }
                 }));
+
+                survey.questions = [startId, ...questionIds, endId]
+
+                survey.save()
 
 
 
@@ -142,7 +82,6 @@ router.post("/", async (req, resp) => {
             }
 
             case 3: {
-                const surveyWithQuestions = await SurveyModel.findOne({ _id: surveyId }).populate('questions')
 
                 const { choices, ...res } = req.body;
 
@@ -156,46 +95,40 @@ router.post("/", async (req, resp) => {
                     choices: choiceIds
                 });
 
-                const endQuestionIndex = surveyWithQuestions.questions.findIndex(item => item.type === 1)
+                survey.questions = [...survey.questions, newQuestion._id];
 
-                const [endQuestionId] = survey.questions.splice(endQuestionIndex, 1)
-
-                survey.questions = [...survey.questions, newQuestion._id, endQuestionId];
-
-                // Save the updated survey
                 await survey.save();
 
+                const surveyWithQuestions = await SurveyModel.findOne({ _id: surveyId }).populate('questions')
 
-                await Promise.all(survey.questions.map(async (item, index) => {
+                const startId = surveyWithQuestions.questions.filter(item => item.type == 0).map(item => item._id)[0]
+                const endId = surveyWithQuestions.questions.filter(item => item.type == 1).map(item => item._id)[0]
+
+                const questionIds = surveyWithQuestions.questions.filter(item => item.type != 0 && item.type != 1).map(item => item._id)
+
+
+                await Promise.all(questionIds.map(async (item, index) => {
                     const question = await QuestionModel.findOne({ _id: item });
-
                     // Update the final_destination of the previous question
                     if (index > 0) {
-                        const previousQuestion = await QuestionModel.findOne({ _id: survey.questions[index - 1] });
-
-                        if (previousQuestion) {
-                            previousQuestion.final_destination = question ? question._id : "";
-                            await previousQuestion.save();
-
-                        }
-
+                        const previousQuestion = await QuestionModel.findOne({ _id: questionIds[index - 1] });
+                        previousQuestion.final_destination = question ? question._id : "";
+                        await previousQuestion.save();
                     }
-
                     // If this is the last question, its final_destination should be empty
-                    if (index === survey.questions.length - 1) {
-                        if (question) {
-                            question.final_destination = "";
-                            await question.save();
-                        }
+                    if (index === questionIds.length - 1) {
+                        question.final_destination = "";
+                        await question.save();
                     }
                 }));
 
-                // Return the newly created question as a response
+                survey.questions = [startId, ...questionIds, endId]
+
+                survey.save()
                 return resp.json(newQuestion);
             }
 
 
-                break;
             default:
                 break;
         }

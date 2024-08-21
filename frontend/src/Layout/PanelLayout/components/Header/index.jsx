@@ -45,7 +45,7 @@ export default function Header() {
 
     return (
         <header className="shadow-md sticky top-0 left-0 duration-200 z-40">
-            <div className="flex items-center justify-between bg-white p-4 border border-red-400">
+            <div className="flex items-center justify-between bg-white p-4 border">
                 <Bars3Icon
                     onClick={handleToggleDrawer}
                     className="w-8 h-8 text-blue-500 cursor-pointer mx-2"
