@@ -13,12 +13,12 @@ export default function Links() {
     const { isCompact } = useSelector((state) => state.settings.layout.drawer)
 
     const linkList = [
-        { title: "داشبورد", path: `dashboard`, Icon: RectangleGroupIcon },
-        {
-            title: "لیست نظرسنجی‌ها",
-            path: "mysurveys",
-            Icon: ClipboardDocumentListIcon,
-        },
+        { title: "لیست نظرسنجی‌ها", path: `dashboard`, Icon: RectangleGroupIcon },
+        // {
+        //     title: "لیست نظرسنجی‌ها",
+        //     path: "mysurveys",
+        //     Icon: ClipboardDocumentListIcon,
+        // },
         {
             title: "پروفایل",
             path: "profile",

@@ -11,8 +11,8 @@ export default function EdgeCard({ formik, edgeIndex, beforQuestions, questions 
   return (
     <>
 
-      <div className=' border'>
-        <div className='mb-4 border border-red-500 flex flex-col gap-2'>
+      <div className='border p-2'>
+        <div className='mb-4  flex flex-col gap-2'>
 
           {
             formik.values.edges[edgeIndex].conditions.map((condition, conditionIndex) => <ConditionCard beforQuestions={beforQuestions} formik={formik} edgeIndex={edgeIndex} conditionIndex={conditionIndex} />)
@@ -45,7 +45,7 @@ export default function EdgeCard({ formik, edgeIndex, beforQuestions, questions 
               conditions: [
                 {
                   boolean_operator: 1,
-                  logical_operator: 1,
+                  logical_operator: formik.values.type === 2 ? 4 : 1,
                   first_operand: formik.values.type === 3 ? formik.values.choices[0]._id : "",
                   second_operand: formik.values._id
                 }

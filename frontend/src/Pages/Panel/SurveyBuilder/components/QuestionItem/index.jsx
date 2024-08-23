@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import React, { useRef, useState } from 'react'
 import { CSS } from '@dnd-kit/utilities'
 import { Button } from 'antd'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import deleteQuestionApi from '../../../../../Apis/questions/deleteQuestion'
 export default function QuestionItem({ id, index, data, onClick, handleDelete, conditionModla }) {
 
@@ -10,6 +10,8 @@ export default function QuestionItem({ id, index, data, onClick, handleDelete, c
         id
     });
     const [searchParams, setSearchParams] = useSearchParams()
+
+    const navigate = useNavigate()
 
     const style = {
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
@@ -29,6 +31,11 @@ export default function QuestionItem({ id, index, data, onClick, handleDelete, c
                 {index} - {data.title}
             </div>
             <div className='flex gap-2'>
+                <Button onClick={() => {
+                    navigate("../report/" + data._id)
+
+
+                }}>گزارش</Button>
                 <Button onClick={() => {
                     setSearchParams({ questionId: data._id })
                     conditionModla()

@@ -79,7 +79,7 @@ export default function ConditionsModal({ open, setOpen, questions }) {
                 <div>سوال :{formik.values.title}</div>
 
                 {/*edgs*/}
-                <div className=' border mt-8 flex-1 overflow-auto flex flex-col gap-4'>
+                <div className=' mt-8 flex-1 overflow-auto flex flex-col gap-4'>
 
 
                     {
@@ -91,7 +91,7 @@ export default function ConditionsModal({ open, setOpen, questions }) {
                             conditions: [
                                 {
                                     boolean_operator: 1,
-                                    logical_operator: 1,
+                                    logical_operator: formik.values.type === 2 ? 4 : 1,
                                     first_operand: formik.values.type === 3 ? formik.values.choices[0]._id : "",
                                     second_operand: formik.values._id
                                 }

@@ -9,7 +9,7 @@ const ChoiceModel = require('../../models/Choice')
 
 router.patch('/:surveyId', async (req, resp) => {
 
-    const { type, questionId } = req.body
+    const { scops, name } = req.body
 
     const { surveyId } = req.params
 
@@ -24,67 +24,16 @@ router.patch('/:surveyId', async (req, resp) => {
 
             if (survey) {
 
-                if (questionId) {
+                survey.scops = scops
+                survey.name = name
+                await survey.save()
 
-                    let question = await QuestionModel.findById({ _id: questionId })
-
-                    Object.assign(question, req.body);
-
-                    await question.save()
-
-                    return resp.json({
-                        statue: "success",
-                        msg: "سوال ذخیره شد"
-                    })
+                return resp.json({
+                    status: "success",
+                    msg: "نظر ستجی  ویرایش شد!"
+                })
 
 
-                } else {
-
-
-                    switch (type) {
-                        case 0:
-                            {
-
-                            }
-
-                        case 2:
-                            {
-
-                                const newQuestion = await QuestionModel.create(req.body)
-                                survey.questions = [...survey.questions, newQuestion._id]
-                                survey.save()
-
-                                return resp.json({
-                                    statue: "success",
-                                    msg: "سوال ذخیره شد"
-                                })
-                            }
-
-                        case 3: {
-
-                            const { choices, ...res } = req.body
-
-                            const savedChoices = await ChoiceModel.insertMany(choices);
-
-                            const choiceIds = savedChoices.map(choice => choice._id);
-
-
-                            const newQuestion = await QuestionModel.create({
-                                ...res,
-                                choices: choiceIds
-                            });
-
-                            survey.questions = [...survey.questions, newQuestion._id]
-                            await newQuestion.save()
-                            await survey.save()
-
-                            return resp.json(req.body)
-                        }
-                        default:
-                            break;
-                    }
-
-                }
 
             } else {
                 return resp.json({

@@ -6,6 +6,7 @@ import PanelLayout from "./Layout/PanelLayout";
 import SurveyBuilder from "./Pages/Panel/SurveyBuilder";
 import DashboardPage from "./Pages/Panel/DashboardPage";
 import SurveyPage from "./Pages/Survey";
+import ReportPage from "./Pages/Panel/Report";
 
 
 const AuthRoutes = [
@@ -38,6 +39,10 @@ const PanelRoutes = [
             {
                 path: "survey/:surveyId",
                 element: <SurveyBuilder />,
+            },
+            {
+                path: "report/:questionId",
+                element: <ReportPage />,
             },
         ],
     },

@@ -27,6 +27,7 @@ import { Button, Select, Switch } from 'antd';
 import { buildings, scops } from '../../../../baseData'
 import { useFormik } from 'formik';
 import EditSurveyNameModal from './EditSurveyNameModal';
+import { patchSurveyApi } from '../../../Apis/survey/patchSurvey';
 
 
 export default function SurveyBuilder() {
@@ -109,6 +110,9 @@ export default function SurveyBuilder() {
             .then(res => {
                 setSurvey(res)
                 setQuestions(res.questions.map(item => ({ ...item, id: item._id })))
+
+                surveyFormik.setFieldValue("scops", res.scops)
+                surveyFormik.setFieldValue("name", res.name)
             }).catch(e => {
                 console.log(e);
             })
@@ -133,12 +137,22 @@ export default function SurveyBuilder() {
 
     const surveyFormik = useFormik({
         initialValues: {
-            scops: []
+            scops: [],
+            name: "",
 
         },
         onSubmit: (values) => {
 
-            console.log(values);
+            patchSurveyApi(surveyId, values)
+                .then(res => {
+
+                    console.log(res);
+
+
+                }).catch(e => {
+                    console.log(e);
+
+                })
 
 
         }
@@ -180,8 +194,8 @@ export default function SurveyBuilder() {
                     < QuestionTypeButton title={"صفحه خوش آمد گویی"} id={"well-come"} handleModal={handleModal} />
                     <div className='grid grid-cols-2 gap-3'>
                         <QuestionTypeButton title={"پاسخ کوتاه"} id={"short-answer"} handleModal={handleModal} />
-                        <QuestionTypeButton title={"چند گزیته ای "} id={"multi-choices"} handleModal={handleModal} />
-                        <QuestionTypeButton title={"پاسخ بلند"} id={"long-answer"} handleModal={handleModal} />
+                        <QuestionTypeButton title={"چند گزینه ای "} id={"multi-choices"} handleModal={handleModal} />
+                        {/* <QuestionTypeButton title={"پاسخ بلند"} id={"long-answer"} handleModal={handleModal} /> */}
                     </div>
                     <QuestionTypeButton title={"صفحه پایان"} id={"the-end"} handleModal={handleModal} />
                     <div className='flex items-center justify-between'>

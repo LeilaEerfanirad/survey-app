@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const ConditionSchema = new mongoose.Schema({
     boolean_operator: { type: Number },
     logical_operator: { type: Number },
-    first_operand: { type: mongoose.Schema.Types.ObjectId },
+    first_operand: { type: String },
     second_operand: { type: mongoose.Schema.Types.ObjectId },
 });
 

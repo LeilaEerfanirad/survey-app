@@ -5,6 +5,8 @@ import { Button, Input } from 'antd'
 import { useFormik } from 'formik'
 import ChoiceItemCard from '../../Components/ChoiceItemCard'
 import MyScopModal from './MyScopModal'
+import postAnswers from '../../Apis/answers/postAnswers'
+import { toast, ToastContainer } from 'react-toastify'
 
 export default function SurveyPage() {
     const { surveyId } = useParams()
@@ -19,6 +21,8 @@ export default function SurveyPage() {
 
     const [question, setQuestion] = useState()
 
+    const [accessModal, setAccessModal] = useState(true)
+
 
     const handleStartSurvey = () => {
 
@@ -30,7 +34,16 @@ export default function SurveyPage() {
             answers: {}
         },
         onSubmit: (values) => {
-            console.log(values);
+            postAnswers(surveyId, values)
+                .then(res => {
+                    console.log(res);
+
+                    toast.success("پاسخ شما ثبت شد")
+
+                }).catch(e => {
+                    console.log(e);
+
+                })
 
         }
     })
@@ -60,11 +73,6 @@ export default function SurveyPage() {
 
     }
 
-
-
-
-
-
     useEffect(() => {
 
         getSingleSurveyApi(surveyId)
@@ -91,18 +99,27 @@ export default function SurveyPage() {
 
 
     return (
-        <div className='flex border h-screen flex-col py-4'>
-            <MyScopModal />
-            <QuestionView answersFormik={answersFormik} questionIndex={questionIndex} question={question} handleStartSurvey={handleStartSurvey} />
-            {questionIndex > 0 && <div className='flex items-center gap-2 justify-center'>
-                <Button onClick={handlePrevQustion} type='primary'>قبلی</Button>
-                <Button onClick={handleNextQuestion} type='primary'>بعدی</Button>
-            </div>}
-        </div>
+        <>
+            <ToastContainer bodyStyle={{
+                direction: "rtl"
+            }} style={{
+                fontSize: "14px",
+                direction: "rtl",
+                textAlign: "right"
+            }} />
+            <div className='flex border h-screen flex-col py-4'>
+                <MyScopModal open={accessModal} handleModla={() => setAccessModal(false)} />
+                <QuestionView answersFormik={answersFormik} questionIndex={questionIndex} question={question} handleStartSurvey={handleStartSurvey} handleSubmit={answersFormik.handleSubmit} />
+                {questionIndex > 0 && <div className='flex items-center gap-2 justify-center'>
+                    {/* <Button onClick={handlePrevQustion} type='primary'>قبلی</Button> */}
+                    <Button onClick={handleNextQuestion} type='primary'>بعدی</Button>
+                </div>}
+            </div>
+        </>
     )
 }
 
-function QuestionView({ question, answersFormik, handleStartSurvey, questionIndex }) {
+function QuestionView({ question, answersFormik, handleStartSurvey, questionIndex, handleSubmit }) {
 
     switch (question?.type) {
         case 0:
@@ -118,6 +135,8 @@ function QuestionView({ question, answersFormik, handleStartSurvey, questionInde
 
                 <div className='w-full h-full flex flex-col items-center justify-center'>
                     <p>{question.title}</p>
+                    <Button type='primary' onClick={handleSubmit}>ارسال پاسخ ها</Button>
+
                 </div>
             )
         case 2:
@@ -125,8 +144,9 @@ function QuestionView({ question, answersFormik, handleStartSurvey, questionInde
 
                 <div className='w-full max-w-sm h-full gap-3 flex flex-col  justify-center'>
                     <p>{questionIndex}-{question.title}</p>
-                    <Input />
-                    <Button type='primary' onClick={handleStartSurvey}>تایید</Button>
+                    <Input value={answersFormik.values.answers[question._id]} onChange={(e) => {
+                        answersFormik.values.answers[question._id] = [e.target.value]
+                    }} />
                 </div>
             )
 
@@ -157,8 +177,33 @@ function QuestionView({ question, answersFormik, handleStartSurvey, questionInde
 }
 
 
-function checkCondition(first_operand, second_operand, answers) {
+function checkCondition(first_operand, second_operand, answers, logical_operator) {
     let userAnswers = answers[second_operand];
+
+    switch (logical_operator) {
+        case 1:
+            return userAnswers.includes(first_operand);
+
+        case 2:
+            return !userAnswers.includes(first_operand);
+
+        case 4:
+            console.log(userAnswers, first_operand);
+            return userAnswers[0] === first_operand;
+
+        case 5:
+            {
+                const strToArray = userAnswers[0].split(' ')
+                return strToArray.includes(first_operand)
+            }
+        case 6: {
+
+            const strToArray = userAnswers[0].split(' ')
+            return !strToArray.includes(first_operand)
+        }
+        default:
+            break;
+    }
 
     if (userAnswers) {
 
@@ -177,9 +222,7 @@ function checkEdges(edges, answers) {
 
         for (const condition of conditions) {
             const { boolean_operator, logical_operator, first_operand, second_operand } = condition;
-            const isConditionMet = logical_operator === 1
-                ? checkCondition(first_operand, second_operand, answers)
-                : !checkCondition(first_operand, second_operand, answers);
+            const isConditionMet = checkCondition(first_operand, second_operand, answers, logical_operator)
 
             if (boolean_operator === 1) { // 'and' operator
                 isTrueEdge = isTrueEdge && isConditionMet;

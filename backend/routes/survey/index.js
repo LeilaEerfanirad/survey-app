@@ -8,6 +8,10 @@ const router = express.Router()
 const createSurvey = require('./createSurvey')
 router.use("/create", createSurvey)
 
+const checkSurveyAccess = require('./checkSurveyAccess')
+router.use("/scop", checkSurveyAccess)
+
+
 const getSurveies = require('./getSurveies')
 router.use("/", getSurveies)
 
@@ -20,6 +24,9 @@ router.use('/', patchSurvey)
 
 const changeQuestionsOrders = require('./changeQuestionsOrders')
 router.use('/', changeQuestionsOrders)
+
+const postAnswers = require('./postAnswers')
+router.use('/', postAnswers)
 
 
 module.exports = router

@@ -64,7 +64,7 @@ export default function ConditionCard({ formik, conditionIndex, edgeIndex, befor
                         const newConditions = [...edge.conditions,
                         {
                             boolean_operator: 1,
-                            logical_operator: 1,
+                            logical_operator: formik.values.type === 2 ? 4 : 1,
                             first_operand: formik.values.type === 3 ? formik.values.choices[0]._id : "",
                             second_operand: formik.values._id
                         }
@@ -111,14 +111,14 @@ function AnswerInputType({ selelectedQuestion, formik, conditionIndex,
     ]
     const shortAnswerTypes = [
         {
-            value: 1,
+            value: 4,
             label: "معادل است با"
         },
         {
-            value: 2,
+            value: 5,
             label: "شامل میشود"
         }, {
-            value: 3,
+            value: 6,
             label: "شامل نمیشود"
         }
     ]
@@ -128,11 +128,18 @@ function AnswerInputType({ selelectedQuestion, formik, conditionIndex,
 
             return (
                 <div className='flex items-center flex-1 gap-2'>
-                    <Select value={formik.values.edges[edgeIndex].conditions[conditionIndex].logical_operator || "0"} style={{
+                    <Select value={formik.values.edges[edgeIndex].conditions[conditionIndex].logical_operator || "3"} style={{
                         width: "100%",
                         flex: "1"
-                    }} options={[{ value: '0', label: <span>پاسخ </span>, disabled: true }, ...shortAnswerTypes]} />
-                    <Input className='flex-1' />
+                    }} onChange={(logical_operator) => {
+                        formik.values.edges[edgeIndex].conditions[conditionIndex].logical_operator = logical_operator
+                        formik.setFieldValue("edges", formik.values.edges)
+
+                    }} options={[{ value: '3', label: <span>پاسخ </span>, disabled: true }, ...shortAnswerTypes]} />
+                    <Input value={formik.values.edges[edgeIndex].conditions[conditionIndex].first_operand || ""} onChange={(e) => {
+                        formik.values.edges[edgeIndex].conditions[conditionIndex].first_operand = e.target.value
+                        formik.setFieldValue("edges", formik.values.edges)
+                    }} className='flex-1' />
                 </div>
             )
 

@@ -7,7 +7,8 @@ const QuestionSchema = new mongoose.Schema({
     final_destination: { type: String },
     answer_type: { type: Number },
     choices: [{ type: mongoose.Schema.Types.ObjectId, ref: "Choice" }],
-    edges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Edge" }]
+    edges: [{ type: mongoose.Schema.Types.ObjectId, ref: "Edge" }],
+    answers: [{ type: String }]
 
 })
 

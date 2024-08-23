@@ -50,7 +50,9 @@ export default function SignupPage() {
                 </div>
 
                 <Button onClick={formik.handleSubmit} className='' type="primary">ورود</Button>
-
+                <Button onClick={() => navigate("/signup")} className='' type="primary">
+                    ثبت‌نام
+                </Button>
 
 
 
